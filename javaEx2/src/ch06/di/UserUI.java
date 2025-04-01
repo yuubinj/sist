@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class UserUI {
 	private Scanner sc = new Scanner(System.in);
-	private User user = new User();
+	private User user = new User(); // 리스트 배열 하나 만들어짐.
 	private UserDisplay disp;
 	
 	public UserUI() {
