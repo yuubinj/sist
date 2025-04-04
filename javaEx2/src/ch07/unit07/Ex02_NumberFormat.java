@@ -21,7 +21,7 @@ public class Ex02_NumberFormat {
 		NumberFormat nf = NumberFormat.getInstance();
 		try {
 			Number n1 = nf.parse(s1); // 반환값은 Number 객체
-			Number n2 = nf.parse(s2); // 
+			Number n2 = nf.parse(s2);
 			Number n3 = nf.parse(s3);
 			
 			System.out.println(n1 + "," + n2 + "," + n3);
