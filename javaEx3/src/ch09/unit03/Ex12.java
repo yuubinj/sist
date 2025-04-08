@@ -34,6 +34,4 @@ class User12 {
 		
 		this.value = value;
 	}
-	
-	
 }

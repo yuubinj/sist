@@ -33,7 +33,6 @@ class User14 {
 			// 이곳에서 throw new Exception("") 한 예외를 catch 함.
 			System.out.println(e.toString());
 		}
-		this.value = value;
 	}
 	
 }
