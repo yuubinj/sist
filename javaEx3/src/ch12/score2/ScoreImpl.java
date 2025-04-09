@@ -1,15 +1,17 @@
-package ch12.score;
+package ch12.score2;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScoreImpl implements Score{
+public class ScoreImpl implements Score {
 	// 학생 정보를 저장할 List 구현 클래스 객체
 	private List<ScoreVO> list = new ArrayList<ScoreVO>();
 	
 	@Override
-	public void insertScore(ScoreVO vo) {
-		// 중복학번이 등록되지 않도록 수정해야 함
+	public void insertScore(ScoreVO vo) throws MyDuplicationException{
+		if(findByHak(vo.getHak()) != null) {
+			throw new MyDuplicationException("등록된 학번입니다.");
+		}
 		
 		// List 객체의 마지막에 요소 추가
 		list.add(vo);
@@ -35,9 +37,8 @@ public class ScoreImpl implements Score{
 	public List<ScoreVO> findByName(String name) {
 		// 이름 검색
 		List<ScoreVO> searchList = new ArrayList<ScoreVO>();
-		
+
 		for(ScoreVO vo : list) {
-			// indexOf 가 -1보다 크기만 하면 존재한다는 것.
 			if(vo.getName().indexOf(name) >= 0) {
 				searchList.add(vo);
 			}
@@ -52,4 +53,5 @@ public class ScoreImpl implements Score{
 		
 		return list.remove(vo); // 삭제를 성공하면 true, 실패하면 false 반환
 	}
+
 }
