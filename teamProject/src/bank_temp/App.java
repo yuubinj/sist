@@ -1,8 +1,7 @@
-package teamProject;
+package bank_temp;
 
 public class App {
 	public static void main(String[] args) {
-		new BendingMachineUI().menu();
-
+		new MainUI().menu();
 	}
 }

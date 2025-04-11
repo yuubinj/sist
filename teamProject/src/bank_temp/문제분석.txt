@@ -1,0 +1,83 @@
+-------------------------------------
+- 메인 메뉴(MainUI)
+   1.은행원  2.고객  3.종료
+   선택 =>
+
+   은행원은 아이디 및 패스워드 입력 필요
+
+
+-------------------------------------
+- 은행원 메뉴(BankUI)
+   1.계좌개설 2.입금 3.출금 4.계좌이체 5.잔액조회 6.거래내역
+   7.계좌번호검색 8.이름검색 9.계좌리스트 10.종료
+   선택 =>
+
+
+-------------------------------------
+- 고객 메뉴(UserUI)
+   1.계좌개설 2.입금 3.출금 4.계좌이체 5.잔액조회 6.거래내역 7.종료
+   선택 =>
+
+
+-------------------------------------
+- 정보 저장 및 기능 구현
+  1. 거래내역 내역(TransactionVO)
+     거래일자(transaction_date), 구분(kind:입금, 출금), 거래액(amount), 잔고(balance), 내역(info:계좌이체등)
+
+
+  2. 계좌 정보 및 계좌 거래 내역 정보(Account)
+      계좌정보 - 계좌번호(accountNo), 이름(owner), 패스워드(pwd), 개설일자(launch_date)
+      거래내역 내역 - List<TransactionVO> transactionList
+
+      거래내역등록 - boolean addTransaction(TransactionVO vo)
+      거래내역리스트 - List<TransactionVO> getTransactionList()
+
+      거래 내역 등록 - boolean addTransaction(TransactionVO vo)
+      마지막거래내역 - TransactionVO lastTransaction()
+
+
+  3. Bank : 통합 클래스
+    계좌 관리 클래스 객체 - BankBook bankBook
+    계좌 검색 클래스 객체 - BankBookSearch bankBookSearch
+    계좌 입출금 클래스 객체 - BankMoney bankMoney
+
+    - 메소드의 실제 구현은 BankBook, BankBookSearch, BankMoney 클래스에서 구현
+      계좌개설 : Account addAccount(String owner, String pwd)
+      입금 : long deposit(String accountNo, long amount)
+      출금 : long withdraw(String accountNo, String pwd, long amount)
+      계좌이체 : long accountTransfer(String fromAccountNo, String fromPwd, String toAccountNo, long amount)
+      잔액조회 : long balance(String accountNo)
+               long balance(String accountNo, String pwd)
+      거래내역조회 : List<TransactionVO> transactionHistory(String accountNo, String pwd)
+                  List<TransactionVO> transactionHistory(String accountNo)
+
+      계좌-번호검색 : Account readAccount(String accountNo)
+      계좌-이름검색 : List<Account> getAccountList(String owner)
+      계좌-전체리스트 : List<Account> getAccountList()
+
+
+  4. BankBook : 계좌 관리 클래스
+    전체 계좌 정보 저장  - List<Account> accountList
+    	
+    계좌 번호생성 - String generateAccountNo()
+    계좌 등록 - Account addAccount(String owner)
+    계좌 전체 리스트 - List<Account> getAccountList()
+
+
+  5. BankBookSearch :  계좌 검색 클래스
+    계좌 관리 클래스 객체 - BankBook bankBook
+    
+    잔액 조회 - long balance(String accountNo)
+    거래 내역 조회 - List<TransactionVO> transactionHistory(String accountNo)
+    계좌 번호 조회 - Account readAccount(String accountNo)
+    이름으로 계좌 조회 - List<Account> getAccountList(String owner)
+
+
+  6. BankMoney : 입출금 관리 클래스
+    계좌 검색 클래스 객체 - BankBookSearch bankBookSearch
+ 
+    입금 - long deposit(String accountNo, long amount)
+    출금 - long withdraw(String accountNo, String pwd, long amount)
+    계좌 이체 - long accountTransfer(String fromAccountNo, String fromPwd, String toAccountNo, long amount)
+    잔액 조회 - long balance(String accountNo)
+              long balance(String accountNo, String pwd)

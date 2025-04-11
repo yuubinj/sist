@@ -3,16 +3,19 @@ package teamProject;
 import java.util.List;
 
 public class UserImpl implements User {
+	private ProductManagement pmg = new ProductManagement();
+	private List<ProductVO> productList;
+	private BendingMachineVO machine;
+	private int insertedMoney = 0; 
 
 	@Override
 	public List<ProductVO> userViewProduct() {
-		// TODO Auto-generated method stub
-		return null;
+		return pmg.productInfo();
 	}
 
 	@Override
 	public boolean userBuyProduct(String name) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
@@ -27,5 +30,4 @@ public class UserImpl implements User {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }
