@@ -1,11 +1,11 @@
-package teamProject;
+package teamProject_previous;
 
 import java.util.List;
 
 public class UserImpl implements User {
 	private ProductManagement pmg = new ProductManagement();
 	private List<ProductVO> productList;
-	private BendingMachineVO machine;
+	private VendingMachineVO machine;
 	private int insertedMoney = 0; 
 
 	@Override

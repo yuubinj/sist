@@ -1,4 +1,4 @@
-package teamProject;
+package teamProject_previous;
 
 import java.util.List;
 
@@ -16,8 +16,4 @@ public interface Manager {
 	boolean recharge(int countOf10000won, int countOf5000won, int countOf1000won, int countOf500won, int countOf100won);
 
 	public ChangeInVM howMuchManagerHave();
-	
-	public boolean isValidDate(String strdate);
-	
-	public boolean isExpired(String strDate);
 }

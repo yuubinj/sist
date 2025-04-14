@@ -1,4 +1,4 @@
-package teamProject;
+package teamProject_previous;
 
 import java.util.List;
 
@@ -53,16 +53,6 @@ public class ManagerImpl implements Manager {
 	@Override
 	public boolean getProfit() {
 		return changeManagement.getProfit();
-	}
-	
-	@Override
-	public boolean isValidDate(String strDate) {
-		return productMangement.isValidDate(strDate);
-	}
-	
-	@Override
-	public boolean isExpired(String strDate) {
-		return productMangement.isExpired(strDate);
 	}
 	
 
