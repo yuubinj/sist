@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.List;
 
 import db.util.DBConn;
@@ -108,35 +107,119 @@ public class ScoreUI {
 		
 		try {
 			System.out.print("수정할 학번 ? ");
-			String hak = br.readLine();
-			if(dao.findById(hak) == null) {
-				System.out.println("없는 데이터");
-				return;
+			dto.setHak(br.readLine());
+			
+			System.out.print("이름 ? ");
+			dto.setName(br.readLine());
+			
+			System.out.print("생년월일[YYYY-MM-DD] ? ");
+			dto.setBirth(br.readLine());
+			
+			System.out.print("국어 ? ");
+			dto.setKor(Integer.parseInt(br.readLine()));
+			
+			System.out.print("영어 ? ");
+			dto.setEng(Integer.parseInt(br.readLine()));
+
+			System.out.print("수학 ? ");
+			dto.setMat(Integer.parseInt(br.readLine()));
+			
+			int result = dao.updateScore(dto);
+			
+			if(result > 0) {
+				System.out.println("데이터 수정이 완료되었습니다. !!!");				
+			} else {
+				System.out.println("등록된 데이터가 아닙니다. !!!");
 			}
 			
-			dto = dao.findById(hak);
-
-			System.out.print("수정할 학번 ? ");
-			
+		} catch (NumberFormatException e) {
+			System.out.println("점수는 숫자만 입력 가능합니다.");
+		} catch (SQLDataException e) {
+			if(e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
+				System.out.println("에러-날짜 형식 오류입니다.");				
+			} else {
+				System.out.println(e.toString());
+			}
+		} catch (SQLException e) {
+			if(e.getErrorCode() == 1407) { // UPDATE-NOT NULL 위반
+				System.out.println("에러-필수 입력사항을 입력하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
-		
+		System.out.println();
 	}
 	
 	public void delete() {
 		System.out.println("\n[데이터 삭제]");
+		String hak;
 		
+		try {
+			System.out.print("삭제할 학번 ? ");
+			hak = br.readLine();
+			
+			int result = dao.deleteScore(hak);
+			
+			if(result > 0) {
+				System.out.println("데이터 삭제가 완료되었습니다. !!!");				
+			} else {
+				System.out.println("등록된 데이터가 아닙니다. !!!");
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println();		
 	}
 	
 	public void findByHak() {
 		System.out.println("\n[학번 검색]");
+		String hak;
 		
+		try {
+			System.out.print("검색할 학번 ? ");
+			hak = br.readLine();
+			
+			ScoreDTO dto = dao.findById(hak);
+			
+			if(dto == null) {
+				System.out.println("등록된 학번이 아닙니다.\n");
+				return;
+			}
+			
+			title();
+			print(dto);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
 	}
 	
 	public void findByName() {
 		System.out.println("\n[이름 검색]");
 		
+		String name;
+						
+		try {
+			System.out.print("검색할 이름 ? ");
+			name = br.readLine();
+			List<ScoreDTO> list = dao.listScore(name);
+			
+			title();
+			for(ScoreDTO dto : list) {
+				print(dto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
 	}
 	
 	public void findByAll() {

@@ -102,9 +102,10 @@ public class ScoreDAOImpl implements ScoreDAO {
 	private Connection conn = DBConn.getConnection();
 
 	@Override
-	public void insertScore(ScoreDTO dto) throws SQLException {
+	public int insertScore(ScoreDTO dto) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
+		int result = 0;
 		
 		// INSERT INTO 테이블명(컬럼명, 컬럼명) VALUES(값, 값)
 		try {
@@ -124,7 +125,7 @@ public class ScoreDAOImpl implements ScoreDAO {
 			pstmt.setInt(6, dto.getMat());
 			
 			// 4) 쿼리를 실행한다. 쿼리를 실행할 때 인자에 쿼리를 전달하지 않는다.
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			throw e;
@@ -132,24 +133,107 @@ public class ScoreDAOImpl implements ScoreDAO {
 			DBUtil.close(pstmt);
 		}
 		
+		return result;
 	}
 
 	@Override
-	public void updateScore(ScoreDTO dto) throws SQLException {
+	public int updateScore(ScoreDTO dto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
 		
+		// UPDATE 테이블명 SET 컬럼=값, 컬럼=값 WHERE 조건
+		try {
+			sql = "UPDATE score SET name = ?, birth = TO_DATE(?, 'YYYY-MM-DD'), "
+					+ " kor = ?, eng = ?, mat = ? "
+					+ " WHERE hak = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getName());
+			pstmt.setString(2, dto.getBirth());
+			pstmt.setInt(3, dto.getKor());
+			pstmt.setInt(4, dto.getEng());
+			pstmt.setInt(5, dto.getMat());
+			pstmt.setString(6, dto.getHak());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DBUtil.close(pstmt);
+		}
 		
+		return result;
 	}
 
 	@Override
-	public void deleteScore(String hak) throws SQLException {
-		// TODO Auto-generated method stub
+	public int deleteScore(String hak) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
 		
+		// DELETE FROM 테이블 WHERE 조건
+		try {
+			sql = "DELETE FROM score WHERE hak = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, hak);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DBUtil.close(pstmt);
+		}
+		
+		return result;
 	}
 
 	@Override
 	public ScoreDTO findById(String hak) {
-		// TODO Auto-generated method stub
-		return null;
+		ScoreDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		// SELECT 컬럼, 컬럼 FROM 테이블 WHERE 조건
+		try {
+			sql = "SELECT hak, name, TO_CHAR(birth, 'YYYY-MM-DD') birth, kor, eng, mat, "
+					+ " kor+eng+mat tot, (kor+eng+mat)/3 ave "
+					+ " FROM score "
+					+ " WHERE hak = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, hak);
+			
+			rs = pstmt.executeQuery();
+			
+			// 조건에 만족하는 데이터가 없으면 들어오지 않음.
+			if(rs.next()) {
+				dto = new ScoreDTO();
+				
+				dto.setHak(rs.getString("hak"));
+				dto.setName(rs.getString("name"));
+				dto.setBirth(rs.getString("birth"));
+				dto.setKor(rs.getInt("kor"));
+				dto.setEng(rs.getInt("eng"));
+				dto.setMat(rs.getInt("mat"));
+				dto.setTot(rs.getInt("tot"));
+				dto.setAve(rs.getInt("ave"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return dto;
 	}
 
 	@Override
@@ -198,8 +282,44 @@ public class ScoreDAOImpl implements ScoreDAO {
 
 	@Override
 	public List<ScoreDTO> listScore(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		List<ScoreDTO> list = new ArrayList<ScoreDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT hak, name, TO_CHAR(birth, 'YYYY-MM-DD') birth, kor, eng, mat, "
+					+ " kor+eng+mat tot, (kor+eng+mat)/3 ave "
+					+ " FROM score "
+					+ " WHERE INSTR(name, ?) >= 1";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				ScoreDTO dto = new ScoreDTO();
+				
+				dto.setHak(rs.getString("hak"));
+				dto.setName(rs.getString("name"));
+				dto.setBirth(rs.getString("birth"));
+				dto.setKor(rs.getInt("kor"));
+				dto.setEng(rs.getInt("eng"));
+				dto.setMat(rs.getInt("mat"));
+				dto.setTot(rs.getInt("tot"));
+				dto.setAve(rs.getInt("ave"));
+				
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return list;
 	}
 	
 }
