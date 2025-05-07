@@ -3,9 +3,7 @@ package db.item3.employee;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLDataException;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +50,8 @@ public class SalaryDAO {
 		
 		try {
 			sql = "UPDATE salary SET payDate = ?, " 
-					+ " paymentDate = ?, pay = ?, sudang = ?, tax = ?, memo = ? "
-					+ " salaryNum = ? ";
+					+ " paymentDate = TO_DATE(?, 'YYYY-MM-DD'), pay = ?, sudang = ?, tax = ?, memo = ? "
+					+ " WHERE salaryNum = ? ";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getPayDate());
@@ -117,7 +115,7 @@ public class SalaryDAO {
 					+ " RIGHT OUTER JOIN employee e"
 					+ " ON s.sabeon = e.sabeon"
 					+ " WHERE payDate = ? "
-					+ " ORDER BY payDate DESC";
+					+ " ORDER BY salaryNum ";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, payDate);
@@ -148,7 +146,6 @@ public class SalaryDAO {
 			DBUtil.close(pstmt);
 		}
 		
-		
 		return list;
 	}
 	
@@ -165,7 +162,8 @@ public class SalaryDAO {
 					+ " FROM salary s"
 					+ " RIGHT OUTER JOIN employee e"
 					+ " ON s.sabeon = e.sabeon"
-					+ " WHERE s.sabeon = ? AND payDate = ?";
+					+ " WHERE s.sabeon = ? AND payDate = ?"
+					+ " ORDER BY salaryNum ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, (String) map.get("사원번호"));
@@ -209,7 +207,8 @@ public class SalaryDAO {
 					+ " (pay+sudang) tot"
 					+ " FROM salary s"
 					+ " RIGHT OUTER JOIN employee e"
-					+ " ON s.sabeon = e.sabeon";
+					+ " ON s.sabeon = e.sabeon  "
+					+ " ORDER BY salaryNum ";
 			
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();

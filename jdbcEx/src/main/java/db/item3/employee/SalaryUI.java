@@ -2,7 +2,6 @@ package db.item3.employee;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +42,7 @@ public class SalaryUI {
 	}
 	
 	public void payment() {
-		System.out.println("\n급여 등록...");
+		System.out.println("\n[급여 등록]");
 		
 		SalaryDTO dto = new SalaryDTO();
 		
@@ -51,10 +50,10 @@ public class SalaryUI {
 			System.out.print("사원번호 ? ");
 			dto.setSabeon(br.readLine());
 			
-			System.out.print("급여년월 ? ");
+			System.out.print("급여년월[YYYYMM] ? ");
 			dto.setPayDate(br.readLine());
 			
-			System.out.print("급여지급일자 ? ");
+			System.out.print("급여지급일자[YYYY-MM-DD] ? ");
 			dto.setPaymentDate(br.readLine());
 			
 			System.out.print("기본급 ? ");
@@ -79,7 +78,7 @@ public class SalaryUI {
 			if(result > 0) {
 				System.out.println("급여 등록이 완료되었습니다.");
 			} else {
-				System.out.println("급여 등록 에러 발생");
+				System.out.println("급여 등록 에러 발생!!!");
 			}
 			
 		} catch (Exception e) {
@@ -88,7 +87,7 @@ public class SalaryUI {
 	}
 	
 	public void update() {
-		System.out.println("\n급여 수정...");
+		System.out.println("\n[급여 수정]");
 		int salaryNum;
 		
 		SalaryDTO dto = new SalaryDTO();
@@ -96,11 +95,12 @@ public class SalaryUI {
 		try {
 			System.out.print("수정할 급여번호 ? ");
 			salaryNum = Integer.parseInt(br.readLine());
+			dto.setSalaryNum(salaryNum);
 			
-			System.out.print("급여년월 ? ");
+			System.out.print("급여년월[YYYYMM] ? ");
 			dto.setPayDate(br.readLine());
 			
-			System.out.print("급여지급일자 ? ");
+			System.out.print("급여지급일자[YYYY-MM-DD] ? ");
 			dto.setPaymentDate(br.readLine());
 			
 			System.out.print("기본급 ? ");
@@ -123,9 +123,9 @@ public class SalaryUI {
 			int result = dao.updateSalary(dto);
 			
 			if(result > 0) {
-				System.out.println("급여 삭제가 완료되었습니다.");
+				System.out.println("급여 수정이 완료되었습니다.");
 			} else {
-				System.out.println("급여 삭제 에러 발생");
+				System.out.println("급여 수정 에러 발생!!!");
 			}
 			
 		} catch (Exception e) {
@@ -135,7 +135,7 @@ public class SalaryUI {
 	}
 
 	public void delete() {
-		System.out.println("\n급여 삭제...");
+		System.out.println("\n[급여 삭제]");
 		int salaryNum;
 		
 		try {
@@ -147,7 +147,7 @@ public class SalaryUI {
 			if(result > 0) {
 				System.out.println("급여 삭제가 완료되었습니다.");
 			} else {
-				System.out.println("급여 삭제 에러 발생");
+				System.out.println("급여 삭제 에러 발생!!!");
 			}
 			
 		} catch (Exception e) {
@@ -157,13 +157,13 @@ public class SalaryUI {
 	}
 
 	public void findBySabeon() {
-		System.out.println("\n사번 검색...");
+		System.out.println("\n[사번 검색]");
 		String payDate;
 		String sabeon;
 		
 		
 		try {
-			System.out.print("검색할 급여년월 ? ");
+			System.out.print("검색할 급여년월[YYYYMM] ? ");
 			payDate = br.readLine();
 			
 			System.out.print("검색할 사원번호 ? ");
@@ -187,15 +187,16 @@ public class SalaryUI {
 	}
 
 	public void monthList() {
-		System.out.println("\n월별 리스트...");
+		System.out.println("\n[월별 리스트]");
 		String payDate;
 		
 		try {
-			System.out.print("검색할 급여년월 ? ");
+			System.out.print("검색할 급여년월[YYYYMM] ? ");
 			payDate = br.readLine();
 			
 			List<SalaryDTO> list = dao.listSalary(payDate);
 			
+			System.out.println();
 			System.out.print("급여번호\t");
 			System.out.print("사번\t");
 			System.out.print("이름\t");
@@ -227,7 +228,7 @@ public class SalaryUI {
 	}
 	
 	public void listAll() {
-		System.out.println("\n급여 리스트...");
+		System.out.println("\n[급여 리스트]");
 		
 		List<SalaryDTO> list = dao.listSalary();
 		
@@ -238,6 +239,7 @@ public class SalaryUI {
 	}
 	
 	public void title() {
+		System.out.println();
 		System.out.print("급여번호\t");
 		System.out.print("사번\t");
 		System.out.print("이름\t");
@@ -255,6 +257,9 @@ public class SalaryUI {
 		System.out.print(dto.getName() + "\t");
 		System.out.print(dto.getPayDate() + "\t");
 		System.out.print(dto.getPaymentDate() + "\t");
+		if(dto.getPaymentDate() == null) {
+			System.out.print("\t");
+		}
 		System.out.print(dto.getPay() + "\t\t");
 		System.out.print(dto.getSudang() + "\t\t");
 		System.out.println(dto.getTot());

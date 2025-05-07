@@ -1,4 +1,4 @@
-package db.item3.employee;
+package db.employee;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,15 +14,14 @@ public class EmployeeDAO {
 	private Connection conn = DBConn.getConnection();
 	
 	public int insertEmployee(EmployeeDTO dto) throws SQLException {
+		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
-		int result = 0;
 		
 		try {
-			sql = "INSERT INTO employee(sabeon, name, birth, tel)"
-					+ " VALUES (?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?) ";
-			
+			sql="INSERT INTO employee(sabeon, name, birth, tel) VALUES (?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
+			
 			pstmt.setString(1, dto.getSabeon());
 			pstmt.setString(2, dto.getName());
 			pstmt.setString(3, dto.getBirth());
@@ -30,8 +29,9 @@ public class EmployeeDAO {
 			
 			result = pstmt.executeUpdate();
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			throw e;
 		} finally {
 			DBUtil.close(pstmt);
 		}
@@ -40,12 +40,12 @@ public class EmployeeDAO {
 	}
 	
 	public int updateEmployee(EmployeeDTO dto) throws SQLException {
+		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
-		int result = 0;
 		
 		try {
-			sql = "UPDATE employee SET name = ?, birth = TO_DATE(?, 'YYYY-MM-DD'), tel = ? WHERE sabeon = ? ";
+			sql = "UPDATE employee SET name=?, birth=?, tel=? WHERE sabeon=?";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getName());
@@ -55,8 +55,9 @@ public class EmployeeDAO {
 			
 			result = pstmt.executeUpdate();
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			throw e;
 		} finally {
 			DBUtil.close(pstmt);
 		}
@@ -71,22 +72,23 @@ public class EmployeeDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT sabeon, name, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel FROM employee WHERE sabeon = ? ";
+			sql = " SELECT sabeon, name, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel "
+				+ " FROM employee "
+				+ " WHERE sabeon = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, sabeon);
+			
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				dto = new EmployeeDTO();
-				
 				dto.setSabeon(rs.getString("sabeon"));
 				dto.setName(rs.getString("name"));
 				dto.setBirth(rs.getString("birth"));
 				dto.setTel(rs.getString("tel"));
 			}
-			
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs);
@@ -104,15 +106,13 @@ public class EmployeeDAO {
 		
 		try {
 			sql = "SELECT sabeon, name, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel "
-					+ " FROM employee "
-					+ " ORDER BY sabeon";
-			pstmt = conn.prepareStatement(sql);
-			
-			rs = pstmt.executeQuery();
+				+ "  FROM employee";
+			pstmt=conn.prepareStatement(sql);
+
+			rs=pstmt.executeQuery();
 			
 			while(rs.next()) {
 				EmployeeDTO dto = new EmployeeDTO();
-				
 				dto.setSabeon(rs.getString("sabeon"));
 				dto.setName(rs.getString("name"));
 				dto.setBirth(rs.getString("birth"));
@@ -120,8 +120,7 @@ public class EmployeeDAO {
 				
 				list.add(dto);
 			}
-			
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs);
@@ -134,13 +133,13 @@ public class EmployeeDAO {
 	public List<EmployeeDTO> listEmployee(String name) {
 		List<EmployeeDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		ResultSet rs= null;
 		String sql;
 		
 		try {
-			sql = "SELECT sabeon, name, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel "
-					+ " FROM employee WHERE INSTR(name, ?) >= 1 "
-					+ " ORDER BY sabeon";
+			sql = " SELECT sabeon, name, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel "
+				+ " FROM employee"
+				+ " WHERE INSTR(name, ?) >= 1";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, name);
@@ -149,7 +148,6 @@ public class EmployeeDAO {
 			
 			while(rs.next()) {
 				EmployeeDTO dto = new EmployeeDTO();
-				
 				dto.setSabeon(rs.getString("sabeon"));
 				dto.setName(rs.getString("name"));
 				dto.setBirth(rs.getString("birth"));
@@ -157,13 +155,12 @@ public class EmployeeDAO {
 				
 				list.add(dto);
 			}
-			
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs);
 			DBUtil.close(pstmt);
-		}
+		}		
 		
 		return list;
 	}

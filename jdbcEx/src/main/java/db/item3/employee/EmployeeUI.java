@@ -33,7 +33,7 @@ public class EmployeeUI {
 	}
 	
 	public void insert() {
-		System.out.println("\n사원 등록...");
+		System.out.println("\n[사원 등록]");
 		
 		EmployeeDTO dto = new EmployeeDTO();
 		
@@ -44,7 +44,7 @@ public class EmployeeUI {
 			System.out.print("이름 ? ");
 			dto.setName(br.readLine());
 			
-			System.out.print("생년월일 ? ");
+			System.out.print("생년월일[YYYY-MM-DD] ? ");
 			dto.setBirth(br.readLine());
 			
 			System.out.print("전화번호 ? ");
@@ -55,7 +55,7 @@ public class EmployeeUI {
 			if(result > 0) {
 				System.out.println("사원 등록이 완료되었습니다.");
 			} else {
-				System.out.println("사원 등록 에러 발생");
+				System.out.println("사원 등록 에러 발생!!!");
 			}
 			
 		} catch (Exception e) {
@@ -64,7 +64,7 @@ public class EmployeeUI {
 	}
 	
 	public void update() {
-		System.out.println("\n사원 정보 수정...");
+		System.out.println("\n[사원 정보 수정]");
 		
 		try {
 			EmployeeDTO dto = new EmployeeDTO();
@@ -77,11 +77,12 @@ public class EmployeeUI {
 			
 			title();
 			print(dto);
+			System.out.println();
 			
 			System.out.print("새로운 이름 ? ");
 			dto.setName(br.readLine());
 			
-			System.out.print("새로운 생년월일 ? ");
+			System.out.print("새로운 생년월일[YYYY-MM-DD] ? ");
 			dto.setBirth(br.readLine());
 
 			System.out.print("새로운 전화번호 ? ");
@@ -92,7 +93,7 @@ public class EmployeeUI {
 			if(result > 0) {
 				System.out.println("사원 수정이 완료되었습니다.");
 			} else {
-				System.out.println("사원 수정 에러 발생");
+				System.out.println("사원 수정 에러 발생!!!");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,7 +102,7 @@ public class EmployeeUI {
 	}
 	
 	public void findBySabeon() {
-		System.out.println("\n사번 검색...");
+		System.out.println("\n[사번 검색]");
 		String sabeon;
 		
 		try {
@@ -118,7 +119,7 @@ public class EmployeeUI {
 	}
 
 	public void findByName() {
-		System.out.println("\n이름 검색...");
+		System.out.println("\n[이름 검색]");
 		String name;
 		
 		try {
@@ -137,7 +138,7 @@ public class EmployeeUI {
 	}
 	
 	public void listAll() {
-		System.out.println("\n사원 리스트...");
+		System.out.println("\n[사원 리스트]");
 		
 		List<EmployeeDTO> list = dao.listEmployee();
 		
@@ -149,6 +150,7 @@ public class EmployeeUI {
 	}
 	
 	public void title() {
+		System.out.println();
 		System.out.print("사번\t");
 		System.out.print("이름\t");
 		System.out.print("생년월일\t\t");

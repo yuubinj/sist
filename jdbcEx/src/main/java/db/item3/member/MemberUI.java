@@ -98,9 +98,6 @@ public class MemberUI {
 			System.out.print("새로운 비밀번호 ? ");
 			dto.setPwd(br.readLine());
 
-			System.out.print("새로운 이름 ? ");
-			dto.setName(br.readLine());
-			
 			System.out.print("새로운 생년월일[YYYY-MM-DD] ? ");
 			dto.setBirth(br.readLine());
 			
